@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Free Hand — Drawing Studio</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="logo-block">
+      <div class="logo-row">
+        <svg class="logo-mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <defs>
+            <linearGradient id="heartGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#ff77c6"/>
+              <stop offset="100%" stop-color="#ff3366"/>
+            </linearGradient>
+            <linearGradient id="brushGrad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#7afcff"/>
+              <stop offset="100%" stop-color="#6366f1"/>
+            </linearGradient>
+          </defs>
+          <!-- Heart -->
+          <path d="M32 56 C12 42 6 30 10 20 C13 12 23 10 28 16 L32 21 L36 16 C41 10 51 12 54 20 C58 30 52 42 32 56 Z"
+                fill="url(#heartGrad)" stroke="#1a1b26" stroke-width="1.5" stroke-linejoin="round"/>
+          <!-- Paintbrush handle (diagonal across heart) -->
+          <rect x="38" y="10" width="6" height="22" rx="1.5" transform="rotate(35 41 21)"
+                fill="#a0522d" stroke="#1a1b26" stroke-width="1.2"/>
+          <!-- Ferrule -->
+          <rect x="30" y="26" width="8" height="5" rx="1" transform="rotate(35 34 28.5)"
+                fill="#d4d4d8" stroke="#1a1b26" stroke-width="1.2"/>
+          <!-- Bristles -->
+          <path d="M22 33 L30 28 L33 33 L29 39 Z" transform="rotate(35 26 33)"
+                fill="url(#brushGrad)" stroke="#1a1b26" stroke-width="1.2" stroke-linejoin="round"/>
+          <!-- Paint drip -->
+          <circle cx="20" cy="40" r="2.2" fill="#7afcff" stroke="#1a1b26" stroke-width="0.8"/>
+          <!-- Sparkle -->
+          <path d="M48 14 L49 17 L52 18 L49 19 L48 22 L47 19 L44 18 L47 17 Z" fill="#fff7a0"/>
+        </svg>
+        <h1 class="logo">Free<span>Hand</span></h1>
+      </div>
+      <p class="tagline">Drawing app where you can draw your dreams</p>
+    </div>
+    <div class="actions">
+      <button id="undoBtn" title="Undo (Ctrl+Z)">↶ Undo</button>
+      <button id="redoBtn" title="Redo (Ctrl+Y)">↷ Redo</button>
+      <button id="clearBtn" title="Clear canvas">✕ Clear</button>
+      <button id="saveBtn" title="Save as PNG">⬇ Save</button>
+    </div>
+  </header>
+
+  <main class="layout">
+
+    <!-- LEFT: BRUSHES -->
+    <aside class="panel brushes-panel">
+      <h2>Brushes</h2>
+      <div id="brushList" class="brush-list"></div>
+
+      <div class="control-block">
+        <label>Size <span id="sizeValue">8</span>px</label>
+        <input type="range" id="sizeSlider" min="1" max="80" value="8" />
+      </div>
+      <div class="control-block">
+        <label>Opacity <span id="opacityValue">100</span>%</label>
+        <input type="range" id="opacitySlider" min="5" max="100" value="100" />
+      </div>
+    </aside>
+
+    <!-- CENTER: CANVAS -->
+    <section class="canvas-area">
+      <div class="canvas-wrap" id="canvasWrap">
+        <canvas id="bgCanvas"></canvas>
+        <canvas id="sheetCanvas"></canvas>
+        <canvas id="drawCanvas"></canvas>
+        <div id="stickerLayer" class="sticker-layer"></div>
+      </div>
+      <div class="canvas-hint" id="canvasHint">Pick a brush and start drawing!</div>
+    </section>
+
+    <!-- RIGHT: TABS -->
+    <aside class="panel right-panel">
+      <div class="tabs">
+        <button class="tab active" data-tab="colors">Color</button>
+        <button class="tab" data-tab="background">Background</button>
+        <button class="tab" data-tab="sheets">Sheets</button>
+        <button class="tab" data-tab="stickers">Stickers</button>
+      </div>
+
+      <!-- COLOR WHEEL TAB -->
+      <div class="tab-panel active" data-panel="colors">
+        <div class="color-wheel-wrap">
+          <canvas id="colorWheel" width="240" height="240"></canvas>
+          <div id="wheelCursor" class="wheel-cursor"></div>
+        </div>
+        <div class="control-block">
+          <label>Brightness <span id="brightnessValue">50</span>%</label>
+          <input type="range" id="brightnessSlider" min="0" max="100" value="50" />
+        </div>
+        <div class="current-color">
+          <div class="swatch" id="currentSwatch"></div>
+          <input type="text" id="hexInput" value="#ff3366" />
+        </div>
+        <h3>Quick Swatches</h3>
+        <div class="swatch-row" id="swatchRow"></div>
+      </div>
+
+      <!-- BACKGROUND TAB -->
+      <div class="tab-panel" data-panel="background">
+        <h3>Canvas Background</h3>
+        <div class="bg-grid" id="bgGrid"></div>
+        <h3>Custom</h3>
+        <input type="color" id="customBg" value="#ffffff" />
+      </div>
+
+      <!-- COLORING SHEETS TAB -->
+      <div class="tab-panel" data-panel="sheets">
+        <h3>Coloring Sheets</h3>
+        <p class="hint">Pick an outline and color it in.</p>
+        <div class="sheet-grid" id="sheetGrid"></div>
+        <button id="clearSheetBtn" class="ghost-btn">Remove Sheet</button>
+      </div>
+
+      <!-- STICKERS TAB -->
+      <div class="tab-panel" data-panel="stickers">
+        <h3>Stickers</h3>
+        <input type="text" id="stickerSearch" placeholder="Search stickers (star, heart, cat...)" />
+        <div class="sticker-grid" id="stickerGrid"></div>
+        <p class="hint">Click a sticker, then click on canvas to place it. Drag to move.</p>
+      </div>
+    </aside>
+  </main>
+
+  <script src="js/brushes.js"></script>
+  <script src="js/stickers.js"></script>
+  <script src="js/sheets.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
