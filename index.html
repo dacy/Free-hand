@@ -8,6 +8,7 @@
 </head>
 <body>
   <header class="topbar">
+    <button class="panel-toggle" id="leftToggle" aria-label="Brushes">🖌️</button>
     <div class="logo-block">
       <div class="logo-row">
         <svg class="logo-mark" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -48,6 +49,7 @@
       <button id="clearBtn" title="Clear canvas">✕ Clear</button>
       <button id="saveBtn" title="Save as PNG">⬇ Save</button>
     </div>
+    <button class="panel-toggle" id="rightToggle" aria-label="Tools">🎨</button>
   </header>
 
   <main class="layout">
@@ -74,9 +76,11 @@
         <canvas id="sheetCanvas"></canvas>
         <canvas id="drawCanvas"></canvas>
         <div id="stickerLayer" class="sticker-layer"></div>
+        <button id="removeSheetFloat" class="float-btn" title="Remove coloring sheet" hidden>✕ Remove Sheet</button>
       </div>
       <div class="canvas-hint" id="canvasHint">Pick a brush and start drawing!</div>
     </section>
+    <div class="panel-backdrop" id="panelBackdrop"></div>
 
     <!-- RIGHT: TABS -->
     <aside class="panel right-panel">
@@ -118,15 +122,15 @@
         <h3>Coloring Sheets</h3>
         <p class="hint">Pick an outline and color it in.</p>
         <div class="sheet-grid" id="sheetGrid"></div>
-        <button id="clearSheetBtn" class="ghost-btn">Remove Sheet</button>
+        <button id="clearSheetBtn" class="big-btn danger">✕ Remove Sheet</button>
       </div>
 
       <!-- STICKERS TAB -->
       <div class="tab-panel" data-panel="stickers">
         <h3>Stickers</h3>
-        <input type="text" id="stickerSearch" placeholder="Search stickers (star, heart, cat...)" />
+        <input type="text" id="stickerSearch" placeholder="Search (star, cat, flower, donut...)" />
         <div class="sticker-grid" id="stickerGrid"></div>
-        <p class="hint">Click a sticker, then click on canvas to place it. Drag to move.</p>
+        <p class="hint">Tap a sticker, tap canvas to place. Tap a placed sticker to resize/rotate/delete.</p>
       </div>
     </aside>
   </main>
